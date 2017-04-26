@@ -2,6 +2,7 @@ package utility;
 
 
 
+import environment.Environment;
 import objects.GameObject;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -13,7 +14,7 @@ import processing.core.PVector;
 public class Utility
 {
     public static enum NODETYPE {
-        EVALUATION, ACTION
+        CONDITION, ACTION, SELECTOR, SEQUENCE, DECORATOR
     }
     public static float mapToRange(float rotation) {
         float r = rotation % (2 * PConstants.PI);
@@ -42,5 +43,19 @@ public class Utility
         return new PVector((int)(position.x/GameConstants.TILE_SIZE.x), (int) (position.y/GameConstants.TILE_SIZE.y));
     }
 
+    public static boolean hasLOS(PVector currPos,PVector target)
+    {
+        PVector lightBeacon = new PVector(currPos.x, currPos.y);
+        PVector targetVelocity = PVector.sub(target, lightBeacon).normalize().mult(GameConstants.DEFAULT_MAX_VEL);
+
+        while (Utility.getGridIndex(lightBeacon) != Utility.getGridIndex(target))
+        {
+            lightBeacon.add(targetVelocity);
+            if (Environment.invalidNodes.contains(Utility.getGridIndex(lightBeacon)))
+                return false;
+        }
+
+        return true;
+    }
 
 }

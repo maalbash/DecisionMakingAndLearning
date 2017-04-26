@@ -42,7 +42,7 @@ public class Player extends GameObject
 
     public Set<Bullet> bullets;
     public PVector playerTarget;
-    public static float BulletDamage = 10;
+    public static float BulletDamage = 5;
 
 
     public State state;

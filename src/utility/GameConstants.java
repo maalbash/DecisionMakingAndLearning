@@ -48,7 +48,7 @@ public class GameConstants
 
     public static final float DEFAULT_CONTACT_DAMAGE = 20;
 
-    public static final float PERCEPTION = 30f;
+    public static final float PERCEPTION = 50f;
     public static final float FLEE_OFFSET = 5f;
 
 }

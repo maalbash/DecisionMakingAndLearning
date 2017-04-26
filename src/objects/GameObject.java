@@ -5,6 +5,7 @@
 package objects;
 
 import engine.Engine;
+import environment.Environment;
 import movement.*;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -294,6 +295,7 @@ public class GameObject extends AbstractObject implements Movable
     {
         this.targetPosition = targetPosition;
     }*/
+
 
 
     public void setDefaults()

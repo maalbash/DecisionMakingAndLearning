@@ -71,6 +71,5 @@ public class Engine extends PApplet
         PVector mouseloc = new PVector(mouseX,mouseY);
         Monster.setPosition(mouseloc);
         Monster.setOrientation((PVector.sub(player.getPosition(), mouseloc)).heading());
-        //player.setMonster(Monster);
     }
 }
