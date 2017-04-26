@@ -12,8 +12,15 @@ public class Decorator extends CompositeNode {
         super();
     }
 
-    Vision checkLOS = (PVector a, PVector b) -> Utility.hasLOS(a,b);
+    //Vision checkLOS = (PVector a, PVector b) -> Utility.hasLOS(a,b);
 
+
+    Vision vision = new Vision() {
+        @Override
+        public boolean foo(PVector x, PVector y) {
+            return Utility.hasLOS(x,y);
+        }
+    };
 
     @Override
     public void addChild(AbstractNode abstractNode) {
@@ -22,20 +29,12 @@ public class Decorator extends CompositeNode {
 
     @Override
     public boolean perform() {
-        while(!checkLOS.foo(this.Monster.getPosition(),this.player.getPosition()))
+        while(!vision.foo(this.Monster.getPosition(),this.player.getPosition()))
             this.ChildNodes.get(0).perform();
         return true;
     }
 
     //getters and setters
-
-    public Vision getCheckLOS() {
-        return checkLOS;
-    }
-
-    public void setCheckLOS(Vision checkLOS) {
-        this.checkLOS = checkLOS;
-    }
 
     public void setPlayer(GameObject player){
         this.player = player;

@@ -14,16 +14,16 @@ public class Monster extends GameObject{
 
     private enum State
     {
-        SEEKTARGET, AVOID
+        SEEKTARGET, AVOID, SHOOT
     }
 
     private GameObject player;
+    private long bulletInterval = 500;
+    private static PVector Monstercolor = new PVector(255, 0, 0);
+    private static float size = 30;
 
-    private static PVector color = new PVector(0, 0, 0);
-    private static float size = 20;
-
-    private static float DEFAULT_X = GameConstants.SCR_WIDTH/2 + 90;
-    private static float DEFAULT_Y = GameConstants.SCR_HEIGHT/2 + 90;
+    private static float DEFAULT_X =  100;
+    private static float DEFAULT_Y =  10;
     private PathFollower pathFollower;
     private static float DEFAULT_ORIENTATION = 0;
     private static final int DEFAULT_PLAYER_LIFE = 100;
@@ -31,13 +31,13 @@ public class Monster extends GameObject{
     private float bulletDamage = 10;
     private State state;
     private static boolean followingPath;
-
+    private long lastBulletTime;
     private PVector MonsterTarget;
 
-    private GameObject finalTarget;
+
 
     public Monster(PApplet app, GameObject player) {
-        super(app, color, size, DEFAULT_X, DEFAULT_Y, DEFAULT_ORIENTATION, DEFAULT_PLAYER_LIFE);
+        super(app, Monstercolor, size, DEFAULT_X, DEFAULT_Y, DEFAULT_ORIENTATION, DEFAULT_PLAYER_LIFE);
 
         this.app = app;
         setMaxVel(3f);
@@ -47,7 +47,7 @@ public class Monster extends GameObject{
 
         this.player = player;
         MonsterTarget = player.getPosition();
-        finalTarget = player;
+
 
         bullets = new HashSet<>();
         pathFollower = new PathFollower(this);
@@ -82,7 +82,9 @@ public class Monster extends GameObject{
     {
         if (obstacleCollisionDetected()) {
             state = State.AVOID;
-        }else {
+        }else if(Utility.hasLOS(this.getPosition(),MonsterTarget)){
+            state = State.SHOOT;
+        }else{
             state = State.SEEKTARGET;
         }
 
@@ -95,16 +97,34 @@ public class Monster extends GameObject{
             case SEEKTARGET:
                 seekPlayer();
                 break;
+
+            case SHOOT:
+                shoot();
+                break;
+
         }
     }
 
     public void avoidObstacle(){
-        pathFollower.findPath(getGridLocation(), Utility.getGridLocation(finalTarget.position));
-        followingPath = true;
+//        pathFollower.findPath(getGridLocation(), Utility.getGridLocation(finalTarget.position));
+//        followingPath = true;
+        state = State.AVOID;
+        targetRotationWander = velocity.heading() + (float) Math.PI;
+        Wander();
     }
 
     public void seekPlayer(){
-        Align(finalTarget.getPosition());
-        Seek(finalTarget.getPosition());
+        Align(getPlayer().getPosition());
+        Seek(getPlayer().getPosition());
+    }
+
+    public void shoot()
+    {
+        long now = System.currentTimeMillis();
+        if(now - lastBulletTime >= bulletInterval)
+        {
+            bullets.add(new Bullet(app, getPosition(), getOrientation(), GameConstants.DEFAULT_BULLET_SIZE, color));
+            lastBulletTime = now;
+        }
     }
 }

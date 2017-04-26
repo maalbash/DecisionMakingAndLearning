@@ -16,6 +16,10 @@ public class Utility
     public static enum NODETYPE {
         CONDITION, ACTION, SELECTOR, SEQUENCE, DECORATOR
     }
+
+    public static enum ACTIONTYPE{
+        SHOOT, SEEK
+    }
     public static float mapToRange(float rotation) {
         float r = rotation % (2 * PConstants.PI);
         if (Math.abs(r) <= Math.PI)

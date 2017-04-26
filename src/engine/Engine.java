@@ -1,6 +1,7 @@
 package engine;
 
 import objects.GameObject;
+import objects.Monster;
 import objects.Player;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -43,7 +44,7 @@ public class Engine extends PApplet
 
         frameRate(60);
 
-        Monster = new GameObject(GameConstants.SCR_CENTER,0);
+        Monster = new Monster(this,player);
         player.setMonster(Monster);
 
     }
@@ -54,7 +55,7 @@ public class Engine extends PApplet
         background(130, 130, 130);
         environment.update();
         player.update();
-
+        Monster.update();
     }
 
     /*public void mouseMoved()
