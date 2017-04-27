@@ -12,6 +12,15 @@ public class Selector extends CompositeNode {
     }
 
     @Override
+    public boolean perform() {
+        for(AbstractNode node: this.ChildNodes)
+            if(node.perform())
+                return true;
+        return false;
+    }
+
+
+    @Override
     public void addChild(AbstractNode abstractNode) {
         super.addChild(abstractNode);
     }
@@ -34,13 +43,5 @@ public class Selector extends CompositeNode {
     @Override
     public Player getPlayer() {
         return this.player;
-    }
-
-    @Override
-    public boolean perform() {
-        for(AbstractNode node: this.ChildNodes)
-            if(node.perform())
-                return true;
-        return false;
     }
 }

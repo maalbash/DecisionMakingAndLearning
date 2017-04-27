@@ -15,21 +15,7 @@ public class ActionNode extends AbstractNode {
         this.actiontype = actiontype;
     }
 
-    public void setPlayer(Player player){
-        this.player = player;
-    }
 
-    public void setMonster(Monster monster){
-        this.Monster = monster;
-    }
-
-    public Player getPlayer(){
-        return this.player;
-    }
-
-    public Monster getMonster(){
-        return this.Monster;
-    }
 
     @Override
     public boolean perform() {
@@ -47,10 +33,6 @@ public class ActionNode extends AbstractNode {
         return somethingWasPerformed;
     }
 
-    @Override
-    public void addChild(AbstractNode child) {
-        this.ChildNodes.add(child);
-    }
 
     public void seekTarget() {
         this.Monster.seekPlayer();
@@ -58,5 +40,30 @@ public class ActionNode extends AbstractNode {
 
     public void shootTarget(){
         this.Monster.shootAtPlayer();
+    }
+
+    @Override
+    public void addChild(AbstractNode child) {
+        this.ChildNodes.add(child);
+    }
+
+    @Override
+    public void setPlayer(Player player){
+        this.player = player;
+    }
+
+    @Override
+    public void setMonster(Monster monster){
+        this.Monster = monster;
+    }
+
+    @Override
+    public Player getPlayer(){
+        return this.player;
+    }
+
+    @Override
+    public Monster getMonster(){
+        return this.Monster;
     }
 }

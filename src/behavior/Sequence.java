@@ -12,6 +12,16 @@ public class Sequence extends CompositeNode {
     }
 
     @Override
+    public boolean perform() {
+        for(AbstractNode node: this.ChildNodes)
+            if(!node.perform())
+                return false;
+        return true;
+    }
+
+    //getters setters and add children.
+
+    @Override
     public void addChild(AbstractNode abstractNode) {
         super.addChild(abstractNode);
     }
@@ -34,13 +44,5 @@ public class Sequence extends CompositeNode {
     @Override
     public Player getPlayer() {
         return this.player;
-    }
-
-    @Override
-    public boolean perform() {
-        for(AbstractNode node: this.ChildNodes)
-            if(!node.perform())
-                return false;
-        return true;
     }
 }
