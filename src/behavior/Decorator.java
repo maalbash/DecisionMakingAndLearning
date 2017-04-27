@@ -28,6 +28,7 @@ public class Decorator extends CompositeNode {
             this.ChildNodes.get(0).perform();
             return false;
         }
+        this.Monster.setFollowingPath(false);
         return true;
     }
 

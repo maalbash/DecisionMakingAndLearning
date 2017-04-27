@@ -37,10 +37,11 @@ public class Engine extends PApplet
     {
         rectMode(PConstants.CENTER);
 
-        player = new Player(this);
-        monster = new Monster(this,player);
+
         environment = new Environment(this);
         staticObjects = new ArrayList<>();
+        player = new Player(this);
+        monster = new Monster(this,player);
         behaviorTree = new BehaviorTree();
         behaviorTree.traverse(monster,player);
 
@@ -60,10 +61,13 @@ public class Engine extends PApplet
         background(130, 130, 130);
         environment.update();
         player.update();
-        //Monster.update();
+        //monster.update();
+
+        if(monster.getGridIndex() == player.getGridIndex())
+            System.out.println("WTF!!!");
 
         if(monster.reachedPlayer())
-            noLoop();
+            reset();
 
         behaviorTree.runAllNodes();
     }
@@ -82,5 +86,10 @@ public class Engine extends PApplet
         PVector mouseloc = new PVector(mouseX,mouseY);
         monster.setPosition(mouseloc);
         monster.setOrientation((PVector.sub(player.getPosition(), mouseloc)).heading());
+    }
+
+    public static void reset(){
+        monster.reset();
+        player.reset();
     }
 }

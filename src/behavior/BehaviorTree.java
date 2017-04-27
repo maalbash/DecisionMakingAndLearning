@@ -34,6 +34,8 @@ public class BehaviorTree {
         //level 4
         //child of decorator
         this.root.ChildNodes.get(1).ChildNodes.get(0).addChild(new ActionNode(Utility.ACTIONTYPE.SEEK));
+
+        System.out.println("DONE CREATING TREE!");
     }
 
     public void runAllNodes(){
@@ -57,6 +59,8 @@ public class BehaviorTree {
         this.root.ChildNodes.get(1).ChildNodes.get(1).setPlayer(player);
         this.root.ChildNodes.get(1).ChildNodes.get(0).ChildNodes.get(0).setMonster(monster);
         this.root.ChildNodes.get(1).ChildNodes.get(0).ChildNodes.get(0).setPlayer(player);
+
+        System.out.println("DONE POPULATING TREE");
     }
 
 }

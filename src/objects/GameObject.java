@@ -301,6 +301,26 @@ public class GameObject extends AbstractObject implements Movable
         return true;
     }
 
+
+    public boolean obstacleNearby()
+    {
+        int index = getGridIndex();
+        int nodeAbove = index - (int) (GameConstants.NUM_TILES.x);
+        int nodeBelow = index + (int) (GameConstants.NUM_TILES.x);
+
+        return (Environment.invalidNodes.contains(index) || Environment.invalidNodes.contains(index - 1)
+                || Environment.invalidNodes.contains(index + 1) || Environment.invalidNodes.contains(nodeAbove)
+                || Environment.invalidNodes.contains(nodeAbove + 1) || Environment.invalidNodes.contains(nodeAbove - 1)
+                || Environment.invalidNodes.contains(nodeBelow) || Environment.invalidNodes.contains(nodeBelow + 1)
+                || Environment.invalidNodes.contains(nodeBelow - 1));
+    }
+
+
+    public void Flee(GameObject target)
+    {
+        setVelocity(Flee.getKinematic(this, PVector.add(target.getPosition(), target.getVelocity())).velocity);
+    }
+
     /*public PVector getTargetPosition()
     {
         return targetPosition;

@@ -1,5 +1,6 @@
 package objects;
 
+import engine.Engine;
 import environment.PathFollower;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -20,19 +21,22 @@ public class Monster extends GameObject{
     private Player player;
     private long bulletInterval = 500;
     private static PVector Monstercolor = new PVector(255, 0, 0);
-    private static float size = 30;
+    private static float size = 20;
 
     private static float DEFAULT_X =  100;
     private static float DEFAULT_Y =  10;
+
     private PathFollower pathFollower;
     private static float DEFAULT_ORIENTATION = 0;
     private static final int DEFAULT_PLAYER_LIFE = 100;
     private Set<Bullet> bullets;
     private float bulletDamage = 10;
     private State state;
+
+
     private static boolean followingPath;
     private long lastBulletTime;
-    private PVector MonsterTarget;
+
 
 
 
@@ -40,14 +44,12 @@ public class Monster extends GameObject{
         super(app, Monstercolor, size, DEFAULT_X, DEFAULT_Y, DEFAULT_ORIENTATION, DEFAULT_PLAYER_LIFE);
 
         this.app = app;
-        setMaxVel(2f);
+        setMaxVel(2.5f);
         setMaxAngularAcc(0.001f);
         setAngularROS(1.5f);
         setAngularROD(2.5f);
 
         this.player = player;
-        MonsterTarget = player.getPosition();
-
 
         bullets = new HashSet<>();
         pathFollower = new PathFollower(this);
@@ -62,18 +64,42 @@ public class Monster extends GameObject{
         this.player = player;
     }
 
+    public static boolean isFollowingPath() {
+        return followingPath;
+    }
+
+    public static void setFollowingPath(boolean followingPath) {
+        Monster.followingPath = followingPath;
+    }
+
+    public PathFollower getPathFollower() {
+        return pathFollower;
+    }
+
+    public void setPathFollower(PathFollower pathFollower) {
+        this.pathFollower = pathFollower;
+    }
 
     public void update()
     {
-        behaviour();
+        //behaviour();
         super.update();
-        reachedPlayer();
+        if(reachedPlayer())
+            Engine.reset();
 
         for (Iterator<Bullet> i = bullets.iterator(); i.hasNext(); )
         {
             Bullet b = i.next();
 
-            if (b.outOfBounds())
+            if(b.hasHit(Engine.player))
+            {
+                i.remove();
+                Engine.player.takeDamage(this.bulletDamage);
+
+                break;
+            }
+
+            else if (b.outOfBounds())
                 i.remove();
             else
                 b.update();
@@ -83,19 +109,27 @@ public class Monster extends GameObject{
     public void behaviour()
     {
         if(playerVisible()){
+            followingPath = false;
             state = State.SHOOT;
-        }else{
+        }else if(obstacleNearby()){
             state = State.SEEKTARGET;
         }
 
         switch(state)
         {
-            case SEEKTARGET:
-                seekPlayer();
+            case SHOOT:
+                if(this.getPosition().dist(Engine.player.getPosition()) <= 500f)
+                    shootAtPlayer();
+                else {
+                    Align(Engine.player.getPosition());
+                    Seek(Engine.player.getPosition());
+                }
                 break;
 
-            case SHOOT:
-                shootAtPlayer();
+            case SEEKTARGET:
+                if(!followingPath || !pathFollower.reachedTarget)
+                    seekPlayer();
+                pathFollower.followPath();
                 break;
 
         }
@@ -103,16 +137,16 @@ public class Monster extends GameObject{
 
 
     public void seekPlayer(){
-
         //TODO - change this to pursue if you find time
-        pathFollower.findPath(getGridLocation(),Utility.getGridLocation(this.player.getPosition()));
+        pathFollower.findPath(getGridLocation(),Engine.player.getGridLocation());
+
         followingPath = true;
-        pathFollower.followPath();
     }
 
     public void shootAtPlayer(){
+        followingPath = false;
         stopMoving();
-        Align(this.player.getPosition());
+        Align(Engine.player.getPosition());
         shoot();
     }
 
@@ -127,10 +161,16 @@ public class Monster extends GameObject{
     }
 
     public boolean reachedPlayer(){
-        return this.getPosition().dist(this.player.getPosition()) <= 1f;
+        return this.getPosition().dist(Engine.player.getPosition()) <= 5f;
     }
 
     public boolean playerVisible(){
-        return hasLOS(this.player.getPosition()) || this.getPosition().dist(this.player.getPosition()) <= GameConstants.MONSTER_PERCEPTION;
+        return hasLOS(Engine.player.getPosition());
+    }
+
+    public void reset(){
+        this.setPosition(new PVector(DEFAULT_X,DEFAULT_Y));
+        followingPath = false;
+        state = State.SEEKTARGET;
     }
 }

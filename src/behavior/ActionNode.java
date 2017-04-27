@@ -23,10 +23,12 @@ public class ActionNode extends AbstractNode {
         switch (actiontype){
             case SEEK:
                 seekTarget();
+//                System.out.println("SEEKING");
                 somethingWasPerformed = true;
                 break;
             case SHOOT:
                 shootTarget();
+//                System.out.println("SHOOTING");
                 somethingWasPerformed = true;
                 break;
         }
@@ -35,11 +37,15 @@ public class ActionNode extends AbstractNode {
 
 
     public void seekTarget() {
-        this.Monster.seekPlayer();
+        if(!this.Monster.isFollowingPath() || !this.Monster.getPathFollower().reachedTarget)
+            this.Monster.seekPlayer();
+        this.Monster.getPathFollower().followPath();
+        this.Monster.update();
     }
 
     public void shootTarget(){
         this.Monster.shootAtPlayer();
+        this.Monster.update();
     }
 
     @Override

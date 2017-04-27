@@ -1,6 +1,8 @@
 package objects;
 
 
+import engine.Engine;
+import environment.Environment;
 import environment.PathFollower;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -45,6 +47,7 @@ public class Player extends GameObject
 
     public Set<Bullet> bullets;
     public PVector playerTarget;
+    boolean followingPath = false;
     public static float BulletDamage = 5;
 
 
@@ -110,9 +113,11 @@ public class Player extends GameObject
 
     public void behaviour()
     {
-        if (obstacleCollisionDetected()) {
+        if (obstacleNearby()) {
             state = State.AVOID;
         }else if (monsterNearBy()) {
+            if(followingPath)
+                followingPath = false;
             state = State.FLEE;
         }else{
             state = State.WANDER;
@@ -121,11 +126,13 @@ public class Player extends GameObject
         switch(state)
         {
             case AVOID:
-                avoidObstacle();
+                if(!followingPath)
+                    avoidObstacle();
+                pathfollower.followPath();
                 break;
 
             case FLEE:
-                fleeMonster();
+                Flee(Engine.monster);
                 break;
 
             case WANDER:
@@ -145,8 +152,12 @@ public class Player extends GameObject
     public void avoidObstacle()
     {
         state = state.AVOID;
-        targetRotationWander = velocity.heading() + (float) Math.PI;
-        Wander();
+        PVector newTarget = new PVector();
+
+        //targetRotationWander = velocity.heading() + (float) Math.PI;
+        //Wander();
+        pathfollower.findPath(this.getGridLocation(),Utility.getGridLocation(newTarget));
+        followingPath = true;
     }
 
     public boolean monsterNearBy(){
@@ -158,5 +169,10 @@ public class Player extends GameObject
         Align(dir);
         playerTarget = PVector.add(this.getPosition(),PVector.mult(dir,GameConstants.FLEE_OFFSET));
         Seek(playerTarget);
+    }
+
+    public void reset(){
+        this.setPosition(new PVector(DEFAULT_X,DEFAULT_Y));
+        state = State.WANDER;
     }
 }
