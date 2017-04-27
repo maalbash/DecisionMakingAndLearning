@@ -18,13 +18,12 @@ public class Monster extends GameObject{
         SEEKTARGET, AVOID, SHOOT
     }
 
-    private Player player;
     private long bulletInterval = 500;
     private static PVector Monstercolor = new PVector(255, 0, 0);
     private static float size = 20;
 
-    private static float DEFAULT_X =  100;
-    private static float DEFAULT_Y =  10;
+    private static float DEFAULT_X =  GameConstants.SCR_WIDTH/2 - 100;
+    private static float DEFAULT_Y =  50;
 
     private PathFollower pathFollower;
     private static float DEFAULT_ORIENTATION = 0;
@@ -40,7 +39,7 @@ public class Monster extends GameObject{
 
 
 
-    public Monster(PApplet app, Player player) {
+    public Monster(PApplet app) {
         super(app, Monstercolor, size, DEFAULT_X, DEFAULT_Y, DEFAULT_ORIENTATION, DEFAULT_PLAYER_LIFE);
 
         this.app = app;
@@ -49,20 +48,13 @@ public class Monster extends GameObject{
         setAngularROS(1.5f);
         setAngularROD(2.5f);
 
-        this.player = player;
 
         bullets = new HashSet<>();
         pathFollower = new PathFollower(this);
         state = State.SEEKTARGET;
+        lastBulletTime = System.currentTimeMillis();
     }
 
-    public GameObject getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
     public static boolean isFollowingPath() {
         return followingPath;
@@ -118,7 +110,7 @@ public class Monster extends GameObject{
         switch(state)
         {
             case SHOOT:
-                if(this.getPosition().dist(Engine.player.getPosition()) <= 500f)
+                if(this.getPosition().dist(Engine.player.getPosition()) <= 300f)
                     shootAtPlayer();
                 else {
                     Align(Engine.player.getPosition());
@@ -144,10 +136,16 @@ public class Monster extends GameObject{
     }
 
     public void shootAtPlayer(){
-        followingPath = false;
-        stopMoving();
-        Align(Engine.player.getPosition());
-        shoot();
+
+        if(this.getPosition().dist(Engine.player.getPosition()) <= 500f) {
+            followingPath = false;
+            Seek(Engine.player.getPosition());
+            shoot();
+        }else {
+            Align(Engine.player.getPosition());
+            Seek(Engine.player.getPosition());
+        }
+
     }
 
     public void shoot()
@@ -161,11 +159,12 @@ public class Monster extends GameObject{
     }
 
     public boolean reachedPlayer(){
-        return this.getPosition().dist(Engine.player.getPosition()) <= 5f;
+        return this.getGridIndex() == Engine.player.getGridIndex();
     }
 
+    //TODO - check why LOS is messed up.
     public boolean playerVisible(){
-        return hasLOS(Engine.player.getPosition());
+        return hasLOS(Utility.getGridLocation(Engine.player.getPosition()));
     }
 
     public void reset(){

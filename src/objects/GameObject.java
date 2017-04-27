@@ -244,7 +244,7 @@ public class GameObject extends AbstractObject implements Movable
         return new PVector((int) (position.x/GameConstants.TILE_SIZE.x), (int)(position.y/GameConstants.TILE_SIZE.y));
     }
 
-    public Integer getGridIndex()
+    public int getGridIndex()
     {
         return (int)(position.y/GameConstants.TILE_SIZE.y) * (int) GameConstants.NUM_TILES.x + (int) (position.x/GameConstants.TILE_SIZE.x);
     }
@@ -288,7 +288,7 @@ public class GameObject extends AbstractObject implements Movable
 
     public boolean hasLOS(PVector target)
     {
-        PVector lightBeacon = new PVector(position.x, position.y);
+        PVector lightBeacon = new PVector(this.position.x, this.position.y);
         PVector targetVelocity = PVector.sub(target, lightBeacon).normalize().mult(maxVel);
 
         while (Utility.getGridIndex(lightBeacon) != Utility.getGridIndex(target))

@@ -1,5 +1,6 @@
 package behavior;
 
+import engine.Engine;
 import objects.Monster;
 import objects.Player;
 import utility.Utility;
@@ -42,25 +43,25 @@ public class BehaviorTree {
         root.perform();
     }
 
-    public void traverse(Monster monster, Player player){
-        this.root.setMonster(monster);
-        this.root.setPlayer(player);
-        this.root.ChildNodes.get(0).setMonster(monster);
-        this.root.ChildNodes.get(0).setPlayer(player);
-        this.root.ChildNodes.get(1).setMonster(monster);
-        this.root.ChildNodes.get(1).setPlayer(player);
-        this.root.ChildNodes.get(0).ChildNodes.get(0).setMonster(monster);
-        this.root.ChildNodes.get(0).ChildNodes.get(0).setPlayer(player);
-        this.root.ChildNodes.get(0).ChildNodes.get(1).setMonster(monster);
-        this.root.ChildNodes.get(0).ChildNodes.get(1).setPlayer(player);
-        this.root.ChildNodes.get(1).ChildNodes.get(0).setMonster(monster);
-        this.root.ChildNodes.get(1).ChildNodes.get(0).setPlayer(player);
-        this.root.ChildNodes.get(1).ChildNodes.get(1).setMonster(monster);
-        this.root.ChildNodes.get(1).ChildNodes.get(1).setPlayer(player);
-        this.root.ChildNodes.get(1).ChildNodes.get(0).ChildNodes.get(0).setMonster(monster);
-        this.root.ChildNodes.get(1).ChildNodes.get(0).ChildNodes.get(0).setPlayer(player);
-
-        System.out.println("DONE POPULATING TREE");
-    }
+//    public void traverse(){
+//        this.root.setMonster(Engine.monster);
+//        this.root.setPlayer(Engine.player);
+//        this.root.ChildNodes.get(0).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(0).setPlayer(Engine.player);
+//        this.root.ChildNodes.get(1).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(1).setPlayer(Engine.player);
+//        this.root.ChildNodes.get(0).ChildNodes.get(0).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(0).ChildNodes.get(0).setPlayer(Engine.player);
+//        this.root.ChildNodes.get(0).ChildNodes.get(1).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(0).ChildNodes.get(1).setPlayer(Engine.player);
+//        this.root.ChildNodes.get(1).ChildNodes.get(0).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(1).ChildNodes.get(0).setPlayer(Engine.player);
+//        this.root.ChildNodes.get(1).ChildNodes.get(1).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(1).ChildNodes.get(1).setPlayer(Engine.player);
+//        this.root.ChildNodes.get(1).ChildNodes.get(0).ChildNodes.get(0).setMonster(Engine.monster);
+//        this.root.ChildNodes.get(1).ChildNodes.get(0).ChildNodes.get(0).setPlayer(Engine.player);
+//
+//        System.out.println("DONE POPULATING TREE");
+//    }
 
 }

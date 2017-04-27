@@ -1,5 +1,6 @@
 package behavior;
 
+import engine.Engine;
 import objects.*;
 import utility.Utility;
 
@@ -37,15 +38,15 @@ public class ActionNode extends AbstractNode {
 
 
     public void seekTarget() {
-        if(!this.Monster.isFollowingPath() || !this.Monster.getPathFollower().reachedTarget)
-            this.Monster.seekPlayer();
-        this.Monster.getPathFollower().followPath();
-        this.Monster.update();
+        if(!Engine.monster.isFollowingPath() || !Engine.monster.getPathFollower().reachedTarget)
+            Engine.monster.seekPlayer();
+        Engine.monster.getPathFollower().followPath();
+        Engine.monster.update();
     }
 
     public void shootTarget(){
-        this.Monster.shootAtPlayer();
-        this.Monster.update();
+        Engine.monster.shootAtPlayer();
+        Engine.monster.update();
     }
 
     @Override
@@ -53,23 +54,4 @@ public class ActionNode extends AbstractNode {
         this.ChildNodes.add(child);
     }
 
-    @Override
-    public void setPlayer(Player player){
-        this.player = player;
-    }
-
-    @Override
-    public void setMonster(Monster monster){
-        this.Monster = monster;
-    }
-
-    @Override
-    public Player getPlayer(){
-        return this.player;
-    }
-
-    @Override
-    public Monster getMonster(){
-        return this.Monster;
-    }
 }

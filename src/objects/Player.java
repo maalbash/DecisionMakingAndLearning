@@ -32,8 +32,8 @@ public class Player extends GameObject
     public static PVector color = new PVector(0, 0, 0);
     public static float size = 20;
 
-    private static float DEFAULT_X = GameConstants.SCR_WIDTH/2 + 90;
-    private static float DEFAULT_Y = GameConstants.SCR_HEIGHT/2 + 90;
+    private static float DEFAULT_X = GameConstants.SCR_WIDTH/2;
+    private static float DEFAULT_Y = GameConstants.SCR_HEIGHT/2;
 
     private static float DEFAULT_ORIENTATION = 0;
     private static final int DEFAULT_PLAYER_LIFE = 100;
@@ -152,10 +152,9 @@ public class Player extends GameObject
     public void avoidObstacle()
     {
         state = state.AVOID;
-        PVector newTarget = new PVector();
+        PVector newTarget = new PVector(GameConstants.SCR_WIDTH - 50, GameConstants.SCR_HEIGHT - 50);
 
-        //targetRotationWander = velocity.heading() + (float) Math.PI;
-        //Wander();
+
         pathfollower.findPath(this.getGridLocation(),Utility.getGridLocation(newTarget));
         followingPath = true;
     }
@@ -170,6 +169,7 @@ public class Player extends GameObject
         playerTarget = PVector.add(this.getPosition(),PVector.mult(dir,GameConstants.FLEE_OFFSET));
         Seek(playerTarget);
     }
+
 
     public void reset(){
         this.setPosition(new PVector(DEFAULT_X,DEFAULT_Y));

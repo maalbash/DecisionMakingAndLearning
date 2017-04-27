@@ -1,10 +1,6 @@
 package behavior;
 
-import objects.Monster;
-import objects.Player;
-import org.jetbrains.annotations.Contract;
-import processing.core.PVector;
-import utility.Utility;
+import engine.Engine;
 
 /**
  * Created by mohz2 on 4/26/2017.
@@ -27,7 +23,7 @@ public class EvaluationNode extends AbstractNode {
 
     @Override
     public boolean perform() {
-        conditionToCheck = Monster.playerVisible();
+        conditionToCheck = Engine.monster.playerVisible();
         return conditionToCheck;
     }
 
@@ -36,23 +32,4 @@ public class EvaluationNode extends AbstractNode {
         this.ChildNodes.add(child);
     }
 
-    @Override
-    public void setMonster(objects.Monster monster) {
-        this.Monster = monster;
-    }
-
-    @Override
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    @Override
-    public Monster getMonster() {
-        return this.Monster;
-    }
-
-    @Override
-    public Player getPlayer() {
-        return this.player;
-    }
 }

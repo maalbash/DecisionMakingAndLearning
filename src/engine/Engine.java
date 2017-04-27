@@ -1,9 +1,7 @@
 package engine;
 
 import behavior.BehaviorTree;
-import objects.GameObject;
-import objects.Monster;
-import objects.Player;
+import objects.*;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -41,9 +39,8 @@ public class Engine extends PApplet
         environment = new Environment(this);
         staticObjects = new ArrayList<>();
         player = new Player(this);
-        monster = new Monster(this,player);
+        monster = new Monster(this);
         behaviorTree = new BehaviorTree();
-        behaviorTree.traverse(monster,player);
 
         for (Obstacle o : environment.getObstacles())
             staticObjects.add(o);
@@ -63,11 +60,9 @@ public class Engine extends PApplet
         player.update();
         //monster.update();
 
-        if(monster.getGridIndex() == player.getGridIndex())
-            System.out.println("WTF!!!");
-
-        if(monster.reachedPlayer())
+        if(monster.reachedPlayer()) {
             reset();
+        }
 
         behaviorTree.runAllNodes();
     }

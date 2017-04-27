@@ -45,6 +45,7 @@ public class Environment
     public void update()
     {
         drawObstacles();
+        //drawInvalidNodes();
     }
 
 
@@ -90,10 +91,10 @@ public class Environment
         /* Clockwise from left */
 
         /* Outer layer */
-        obstacles.add(new Obstacle(app, new PVector(0.2f * numTiles.x, 0.5f * numTiles.y), new PVector(4, 20))); //left wall
-        obstacles.add(new Obstacle(app, new PVector(0.5f * numTiles.x, 0.2f * numTiles.y), new PVector(22, 4))); //back seats
-        obstacles.add(new Obstacle(app, new PVector(0.5f * numTiles.x, 0.8f * numTiles.y), new PVector(22, 4))); //front seats
-        obstacles.add(new Obstacle(app, new PVector(0.8f * numTiles.x, 0.5f * numTiles.y), new PVector(4, 20))); //right wall
+        obstacles.add(new Obstacle(app, new PVector(0.2f * numTiles.x, 0.5f * numTiles.y), new PVector(3, 20))); //left wall
+        obstacles.add(new Obstacle(app, new PVector(0.5f * numTiles.x, 0.2f * numTiles.y), new PVector(22, 3))); //back seats
+        obstacles.add(new Obstacle(app, new PVector(0.5f * numTiles.x, 0.8f * numTiles.y), new PVector(22, 3))); //front seats
+        obstacles.add(new Obstacle(app, new PVector(0.8f * numTiles.x, 0.5f * numTiles.y), new PVector(3, 20))); //right wall
 
         /* Tooth nodes are not considered invalid */
 

@@ -1,5 +1,6 @@
 package behavior;
 
+import engine.Engine;
 import objects.GameObject;
 import objects.Monster;
 import objects.Player;
@@ -24,32 +25,12 @@ public class Decorator extends CompositeNode {
 
     @Override
     public boolean perform() {
-        if(!this.Monster.playerVisible()) {
+        if(!Engine.monster.playerVisible()) {
             this.ChildNodes.get(0).perform();
             return false;
         }
-        this.Monster.setFollowingPath(false);
+        Engine.monster.setFollowingPath(false);
         return true;
     }
 
-    //getters and setters
-    @Override
-    public void setPlayer(Player player){
-        this.player = player;
-    }
-
-    @Override
-    public Player getPlayer(){
-        return this.player;
-    }
-
-    @Override
-    public void setMonster(Monster monster){
-        this.Monster = monster;
-    }
-
-    @Override
-    public Monster getMonster(){
-        return this.Monster;
-    }
 }

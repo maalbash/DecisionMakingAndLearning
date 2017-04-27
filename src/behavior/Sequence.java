@@ -19,30 +19,4 @@ public class Sequence extends CompositeNode {
         return true;
     }
 
-    //getters setters and add children.
-
-    @Override
-    public void addChild(AbstractNode abstractNode) {
-        super.addChild(abstractNode);
-    }
-
-    @Override
-    public void setMonster(objects.Monster monster) {
-        this.Monster = monster;
-    }
-
-    @Override
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    @Override
-    public Monster getMonster() {
-        return this.Monster;
-    }
-
-    @Override
-    public Player getPlayer() {
-        return this.player;
-    }
 }
