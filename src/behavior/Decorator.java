@@ -1,6 +1,8 @@
 package behavior;
 
 import objects.GameObject;
+import objects.Monster;
+import objects.Player;
 import processing.core.PVector;
 import utility.*;
 /**
@@ -15,13 +17,6 @@ public class Decorator extends CompositeNode {
     //Vision checkLOS = (PVector a, PVector b) -> Utility.hasLOS(a,b);
 
 
-    Vision vision = new Vision() {
-        @Override
-        public boolean foo(PVector x, PVector y) {
-            return Utility.hasLOS(x,y);
-        }
-    };
-
     @Override
     public void addChild(AbstractNode abstractNode) {
         super.addChild(abstractNode);
@@ -29,27 +24,27 @@ public class Decorator extends CompositeNode {
 
     @Override
     public boolean perform() {
-        while(!vision.foo(this.Monster.getPosition(),this.player.getPosition()))
+        while(!this.Monster.playerVisible())
             this.ChildNodes.get(0).perform();
         return true;
     }
 
     //getters and setters
 
-    public void setPlayer(GameObject player){
+    public void setPlayer(Player player){
         this.player = player;
     }
 
-    public GameObject getPlayer(){
+    public Player getPlayer(){
         return this.player;
     }
 
 
-    public void setMonster(GameObject monster){
+    public void setMonster(Monster monster){
         this.Monster = monster;
     }
 
-    public GameObject getMonster(){
+    public Monster getMonster(){
         return this.Monster;
     }
 }

@@ -17,7 +17,7 @@ public class Monster extends GameObject{
         SEEKTARGET, AVOID, SHOOT
     }
 
-    private GameObject player;
+    private Player player;
     private long bulletInterval = 500;
     private static PVector Monstercolor = new PVector(255, 0, 0);
     private static float size = 30;
@@ -36,11 +36,11 @@ public class Monster extends GameObject{
 
 
 
-    public Monster(PApplet app, GameObject player) {
+    public Monster(PApplet app, Player player) {
         super(app, Monstercolor, size, DEFAULT_X, DEFAULT_Y, DEFAULT_ORIENTATION, DEFAULT_PLAYER_LIFE);
 
         this.app = app;
-        setMaxVel(3f);
+        setMaxVel(2f);
         setMaxAngularAcc(0.001f);
         setAngularROS(1.5f);
         setAngularROD(2.5f);
@@ -58,14 +58,16 @@ public class Monster extends GameObject{
         return player;
     }
 
-    public void setPlayer(GameObject player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
+
 
     public void update()
     {
         behaviour();
         super.update();
+        reachedPlayer();
 
         for (Iterator<Bullet> i = bullets.iterator(); i.hasNext(); )
         {
@@ -80,9 +82,7 @@ public class Monster extends GameObject{
 
     public void behaviour()
     {
-        if (obstacleCollisionDetected()) {
-            state = State.AVOID;
-        }else if(Utility.hasLOS(this.getPosition(),MonsterTarget)){
+        if(playerVisible()){
             state = State.SHOOT;
         }else{
             state = State.SEEKTARGET;
@@ -90,32 +90,30 @@ public class Monster extends GameObject{
 
         switch(state)
         {
-            case AVOID:
-                avoidObstacle();
-                break;
-
             case SEEKTARGET:
                 seekPlayer();
                 break;
 
             case SHOOT:
-                shoot();
+                shootAtPlayer();
                 break;
 
         }
     }
 
-    public void avoidObstacle(){
-//        pathFollower.findPath(getGridLocation(), Utility.getGridLocation(finalTarget.position));
-//        followingPath = true;
-        state = State.AVOID;
-        targetRotationWander = velocity.heading() + (float) Math.PI;
-        Wander();
-    }
 
     public void seekPlayer(){
-        Align(getPlayer().getPosition());
-        Seek(getPlayer().getPosition());
+
+        //TODO - change this to pursue if you find time
+        pathFollower.findPath(getGridLocation(),Utility.getGridLocation(this.player.getPosition()));
+        followingPath = true;
+        pathFollower.followPath();
+    }
+
+    public void shootAtPlayer(){
+        stopMoving();
+        Align(this.player.getPosition());
+        shoot();
     }
 
     public void shoot()
@@ -126,5 +124,13 @@ public class Monster extends GameObject{
             bullets.add(new Bullet(app, getPosition(), getOrientation(), GameConstants.DEFAULT_BULLET_SIZE, color));
             lastBulletTime = now;
         }
+    }
+
+    public boolean reachedPlayer(){
+        return this.getPosition().dist(this.player.getPosition()) <= 1f;
+    }
+
+    public boolean playerVisible(){
+        return hasLOS(this.player.getPosition()) || this.getPosition().dist(this.player.getPosition()) <= GameConstants.MONSTER_PERCEPTION;
     }
 }

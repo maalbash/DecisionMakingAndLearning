@@ -40,6 +40,9 @@ public class Player extends GameObject
 
     private PathFollower pathfollower;
 
+    private PVector prevPos;
+    private PVector nextPos;
+
     public Set<Bullet> bullets;
     public PVector playerTarget;
     public static float BulletDamage = 5;
@@ -74,6 +77,14 @@ public class Player extends GameObject
         Monster = monster;
     }
 
+    public PVector getPrevPos() {
+        return prevPos;
+    }
+
+    public PVector getNextPos() {
+        return nextPos;
+    }
+
     public void shoot()
     {
         bullets.add(new Bullet(app, getPosition(), getOrientation(), GameConstants.DEFAULT_BULLET_SIZE, color));
@@ -82,9 +93,10 @@ public class Player extends GameObject
 
     public void update()
     {
+        prevPos = this.getPosition();
         behaviour();
         super.update();
-
+        nextPos = PVector.add(this.getPosition(),PVector.mult(this.getPosition(),this.maxVel));
         for (Iterator<Bullet> i = bullets.iterator(); i.hasNext(); )
         {
             Bullet b = i.next();
@@ -128,13 +140,11 @@ public class Player extends GameObject
         playerTarget = new PVector(app.mouseX, app.mouseY);
         setMaxVel(3f);
         setMaxAngularAcc(GameConstants.DEFAULT_MAX_angularACC);
-        //state = State.SEEKTARGET;
     }
 
     public void avoidObstacle()
     {
         state = state.AVOID;
-
         targetRotationWander = velocity.heading() + (float) Math.PI;
         Wander();
     }
@@ -145,7 +155,7 @@ public class Player extends GameObject
 
     public void fleeMonster(){
         PVector dir = PVector.sub(this.position,getMonster().position);
-        this.setOrientation(dir.heading());
+        Align(dir);
         playerTarget = PVector.add(this.getPosition(),PVector.mult(dir,GameConstants.FLEE_OFFSET));
         Seek(playerTarget);
     }

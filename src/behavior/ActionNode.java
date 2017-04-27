@@ -1,5 +1,6 @@
 package behavior;
 
+import objects.*;
 import utility.Utility;
 
 /**
@@ -9,8 +10,25 @@ public class ActionNode extends AbstractNode {
 
     private Utility.ACTIONTYPE actiontype;
 
+
     public ActionNode(Utility.ACTIONTYPE actiontype) {
         this.actiontype = actiontype;
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
+    }
+
+    public void setMonster(Monster monster){
+        this.Monster = monster;
+    }
+
+    public Player getPlayer(){
+        return this.player;
+    }
+
+    public Monster getMonster(){
+        return this.Monster;
     }
 
     @Override
@@ -29,12 +47,16 @@ public class ActionNode extends AbstractNode {
         return somethingWasPerformed;
     }
 
-    public void seekTarget()
-    {
+    @Override
+    public void addChild(AbstractNode child) {
+        this.ChildNodes.add(child);
+    }
 
+    public void seekTarget() {
+        this.Monster.seekPlayer();
     }
 
     public void shootTarget(){
-
+        this.Monster.shootAtPlayer();
     }
 }
