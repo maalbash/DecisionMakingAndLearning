@@ -18,6 +18,8 @@ public class Monster extends GameObject{
         SEEKTARGET, AVOID, SHOOT
     }
 
+    private GameConstants.MONSTER_STATE monster_state;
+
     private long bulletInterval = 500;
     private static PVector Monstercolor = new PVector(255, 0, 0);
     private static float size = 20;
@@ -72,9 +74,16 @@ public class Monster extends GameObject{
         this.pathFollower = pathFollower;
     }
 
+    public GameConstants.MONSTER_STATE getMonster_state() {
+        return monster_state;
+    }
+
+    public void setMonster_state(GameConstants.MONSTER_STATE monster_state) {
+        this.monster_state = monster_state;
+    }
+
     public void update()
     {
-        //behaviour();
         super.update();
         if(reachedPlayer())
             Engine.reset();
@@ -103,7 +112,7 @@ public class Monster extends GameObject{
         if(playerVisible()){
             followingPath = false;
             state = State.SHOOT;
-        }else if(obstacleNearby()){
+        }else{
             state = State.SEEKTARGET;
         }
 
@@ -123,27 +132,27 @@ public class Monster extends GameObject{
                     seekPlayer();
                 pathFollower.followPath();
                 break;
-
         }
     }
 
 
     public void seekPlayer(){
-        //TODO - change this to pursue if you find time
         pathFollower.findPath(getGridLocation(),Engine.player.getGridLocation());
-
+        this.setMonster_state(GameConstants.MONSTER_STATE.PATHFOLLOWING);
         followingPath = true;
     }
 
     public void shootAtPlayer(){
 
-        if(this.getPosition().dist(Engine.player.getPosition()) <= 500f) {
+        if(canShoot()) {
             followingPath = false;
+            this.setMonster_state(GameConstants.MONSTER_STATE.SHOOTING);
             Seek(Engine.player.getPosition());
             shoot();
         }else {
             Align(Engine.player.getPosition());
             Seek(Engine.player.getPosition());
+            this.setMonster_state(GameConstants.MONSTER_STATE.SEEKING);
         }
 
     }
@@ -164,7 +173,11 @@ public class Monster extends GameObject{
 
     //TODO - check why LOS is messed up.
     public boolean playerVisible(){
-        return hasLOS(Utility.getGridLocation(Engine.player.getPosition()));
+        return hasLOS(Engine.player.getGridLocation());
+    }
+
+    public boolean canShoot(){
+        return PVector.sub(this.getPosition(),Engine.player.getPosition()).mag() <= 400f;
     }
 
     public void reset(){

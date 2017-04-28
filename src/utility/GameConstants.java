@@ -52,4 +52,8 @@ public class GameConstants
     public static final float MONSTER_PERCEPTION = 200f;
     public static final float FLEE_OFFSET = 5f;
 
+
+    public static enum MONSTER_STATE{
+        PATHFOLLOWING, SEEKING, SHOOTING
+    }
 }

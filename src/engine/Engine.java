@@ -1,5 +1,6 @@
 package engine;
 
+import Learning.Learner;
 import behavior.BehaviorTree;
 import objects.*;
 import processing.core.PApplet;
@@ -18,7 +19,10 @@ public class Engine extends PApplet
     public static Monster monster;
     public static Environment environment;
     public static BehaviorTree behaviorTree;
-
+    public static boolean useBehaviorTree;
+    public static boolean learningAlgo;
+    public static Logger logger;
+    public static Learner learner;
     public static List<Obstacle> staticObjects;
 
     public static void main(String[] args){
@@ -41,15 +45,20 @@ public class Engine extends PApplet
         player = new Player(this);
         monster = new Monster(this);
         behaviorTree = new BehaviorTree();
+        logger = new Logger(this);
 
         for (Obstacle o : environment.getObstacles())
             staticObjects.add(o);
 
         frameRate(60);
 
-
+        useBehaviorTree = false;
         player.setMonster(monster);
+        learner = new Learner();
 
+        //learner.loadData();
+
+        //learner.calculateNetEntropy();
     }
 
 
@@ -58,13 +67,20 @@ public class Engine extends PApplet
         background(130, 130, 130);
         environment.update();
         player.update();
-        //monster.update();
+
+        if(useBehaviorTree)
+            behaviorTree.runAllNodes();
+        else{
+            monster.behaviour();
+            monster.update();
+        }
 
         if(monster.reachedPlayer()) {
             reset();
         }
-
-        behaviorTree.runAllNodes();
+        if(learningAlgo)
+            learner.runLearning();
+        //logger.populateJsonArray();
     }
 
     /*public void mouseMoved()
@@ -78,13 +94,13 @@ public class Engine extends PApplet
 
     public void mouseClicked()
     {
-        PVector mouseloc = new PVector(mouseX,mouseY);
-        monster.setPosition(mouseloc);
-        monster.setOrientation((PVector.sub(player.getPosition(), mouseloc)).heading());
+        useBehaviorTree = !useBehaviorTree;
     }
 
     public static void reset(){
         monster.reset();
         player.reset();
+        //System.out.println(logger.numOfData);
+        //logger.writeJsonToFile();
     }
 }

@@ -60,7 +60,7 @@ public class Player extends GameObject
         this.app = app;
 
         setMaxVel(1f);
-        setMaxAngularAcc(0.001f);
+        setMaxAngularAcc(0.0001f);
         setAngularROS(1.5f);
         setAngularROD(2.5f);
 

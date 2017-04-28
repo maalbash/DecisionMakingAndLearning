@@ -25,7 +25,7 @@ public class PathFollower
     private int targetIndex = 0;
     private int characterGridIndex;
     private int targetGridIndex;
-
+    private int timer;
     private GraphSearch search;
 
     private int pathOffset = 3;         //Actually 4. The +1 is to account for the 0 based indexing of the path.
@@ -72,6 +72,7 @@ public class PathFollower
 
         this.currentTarget = this.path.get(targetIndex);
 
+        timer = 0;
         //renderSearch();
     }
 
@@ -79,7 +80,10 @@ public class PathFollower
     {
         if (path != null && path.size() > 0)
         {
-            character.Align(currentTarget);
+            if(timer > 5) {
+                character.Align(currentTarget);
+                timer = 0;
+            }
             character.Seek(currentTarget);
 
             characterGridIndex = character.getGridIndex();
@@ -96,6 +100,7 @@ public class PathFollower
                 }
 
                 currentTarget = path.get(targetIndex);
+                timer++;
             }
         }
     }

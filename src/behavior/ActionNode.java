@@ -24,12 +24,10 @@ public class ActionNode extends AbstractNode {
         switch (actiontype){
             case SEEK:
                 seekTarget();
-//                System.out.println("SEEKING");
                 somethingWasPerformed = true;
                 break;
             case SHOOT:
                 shootTarget();
-//                System.out.println("SHOOTING");
                 somethingWasPerformed = true;
                 break;
         }
